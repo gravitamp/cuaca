@@ -45,8 +45,10 @@ func (c *Classifier) Train(category string, time string, dmin string, dmax strin
 
 	// for token, vector := range onehotvectors {
 	// 	fmt.Println(token, vector)
-	// atau
 
+	// c.cuaca[category][time] ++
+	c.categoriesWords[category]++
+	c.totalWords++
 	c.categoriesDocuments[category]++
 	c.totalDocuments++
 }

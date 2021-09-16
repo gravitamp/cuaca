@@ -98,7 +98,7 @@ func setupData(file string) {
 		// time["Pagi"] = 1
 		// time["Siang"] = 2
 		// time["Malam"] = 3
-		// fmt.Println("map:", time["Pagi"]+time["Siang"])
+		// fmt.Println("map:", time)
 		//dibagi data train dan test
 		if rand.Float64() > testPercentage {
 			train = append(train, document{waktu, class, dens_min, dens_max, temp_min, temp_max})
