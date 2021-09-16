@@ -7,8 +7,9 @@ import (
 	"os"
 	"strings"
 	"time"
-	// "github.com/hlts2/gohot"
 )
+
+// "github.com/hlts2/gohot"
 
 // parameters
 var (
@@ -43,13 +44,6 @@ func main() {
 	fmt.Println("Data file used:", datafile)
 	fmt.Println("no of docs in TRAIN dataset:", len(train))
 	fmt.Println("no of docs in TEST dataset:", len(test))
-
-	// text := "hujan"
-	// onehotvectors := gohot.CreateOneHotVectorFromText(text)
-
-	// for token, vector := range onehotvectors {
-	// 	fmt.Println(token, vector)
-	// }
 
 	// buat classifier dengan parameter yang ada
 	c := createClassifier(categories, threshold)
@@ -99,12 +93,17 @@ func setupData(file string) {
 	for _, line := range data {
 		s := strings.Split(line, ",")
 		waktu, class, dens_min, dens_max, temp_min, temp_max := s[0], s[1], s[2], s[3], s[4], s[5]
-
+		// time := make(map[string]int)
+		// time["Dini Hari"] = 0
+		// time["Pagi"] = 1
+		// time["Siang"] = 2
+		// time["Malam"] = 3
+		// fmt.Println("map:", time["Pagi"]+time["Siang"])
 		//dibagi data train dan test
 		if rand.Float64() > testPercentage {
-			train = append(train, document{class, waktu, dens_min, dens_max, temp_min, temp_max})
+			train = append(train, document{waktu, class, dens_min, dens_max, temp_min, temp_max})
 		} else {
-			test = append(test, document{class, waktu, dens_min, dens_max, temp_min, temp_max})
+			test = append(test, document{waktu, class, dens_min, dens_max, temp_min, temp_max})
 		}
 	}
 }

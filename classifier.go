@@ -11,7 +11,7 @@ type sorted struct {
 
 // Classifier is what we use to classify documents
 type Classifier struct {
-	cuaca               map[string]map[string]int
+	cuaca               (map[string]map[string]int)
 	totalWords          int
 	categoriesDocuments map[string]int
 	totalDocuments      int
@@ -40,6 +40,12 @@ func createClassifier(categories []string, threshold float64) (c Classifier) {
 
 // Train the classifier
 func (c *Classifier) Train(category string, time string, dmin string, dmax string, tmin string, tmax string) {
+
+	// onehotvectors := gohot.CreateOneHotVectorFromText(time)
+
+	// for token, vector := range onehotvectors {
+	// 	fmt.Println(token, vector)
+	// atau
 
 	c.categoriesDocuments[category]++
 	c.totalDocuments++
