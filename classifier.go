@@ -73,7 +73,7 @@ func (c *Classifier) Classify(waktu string, dmin string, dmax string, tmin strin
 func (c *Classifier) Probabilities(waktu string, dmin string, dmax string, tmin string, tmax string) (p map[string]float64) {
 	p = make(map[string]float64)
 	for category := range c.cuaca {
-		p[category] = c.pCategoryDocument(category, waktu)
+		p[category] = c.pCategoryDocument(category, waktu, dmin, dmax, tmin, tmax)
 	}
 	return
 }
@@ -84,19 +84,13 @@ func (c *Classifier) pCategory(category string) float64 {
 }
 
 // p (condition | category)
-func (c *Classifier) pDocumentCategory(category string, condition string) (p float64) {
-	p = 1.0
-	// for cond := range countCuaca(condition) {
-	// 	p = p * c.pWordCategory(category, cond)
-	// }
-	return p
+func (c *Classifier) pDocumentCategory(category string, condition string) float64 {
+	return float64(c.cuaca[category][condition]+1) / float64(c.categoriesWords[category])
 }
 
-func (c *Classifier) pWordCategory(category string, condition string) float64 {
-	return 8 //float64(c.cuaca[category][stem(word)]+1) / float64(c.categoriesWords[category])
-}
-
-// p (category | condition)
-func (c *Classifier) pCategoryDocument(category string, condition string) float64 {
-	return c.pDocumentCategory(category, condition) * c.pCategory(category)
+// p (category | condition1|cond2|cond3|cond4)
+func (c *Classifier) pCategoryDocument(category string, waktu string, dmin string, dmax string, tmin string, tmax string) float64 {
+	return c.pDocumentCategory(category, waktu) * c.pDocumentCategory(category, dmin) *
+		c.pDocumentCategory(category, dmax) * c.pDocumentCategory(category, tmin) *
+		c.pDocumentCategory(category, tmax) * c.pCategory(category)
 }
