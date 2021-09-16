@@ -7,6 +7,7 @@ import (
 	"os"
 	"strings"
 	"time"
+	// "github.com/hlts2/gohot"
 )
 
 // parameters
@@ -36,12 +37,21 @@ var train []document
 var test []document
 
 func main() {
+
 	setupData(datafile)
+
 	fmt.Println("Data file used:", datafile)
 	fmt.Println("no of docs in TRAIN dataset:", len(train))
 	fmt.Println("no of docs in TEST dataset:", len(test))
 
-	//buat classifier dengan parameter yang ada
+	// text := "hujan"
+	// onehotvectors := gohot.CreateOneHotVectorFromText(text)
+
+	// for token, vector := range onehotvectors {
+	// 	fmt.Println(token, vector)
+	// }
+
+	// buat classifier dengan parameter yang ada
 	c := createClassifier(categories, threshold)
 
 	// train on train dataset
