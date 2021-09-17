@@ -32,9 +32,6 @@ func sum(arr []float64) float64 {
 	return res
 }
 
-// StdNormal is the standard normal distribution (Mu = 0, Sigma = 1)
-var StdNormal = NormalDist{0, 1}
-
 // 1/sqrt(2 * pi)
 const invSqrt2Pi = 0.39894228040143267793994605993438186847585863116493465766592583
 

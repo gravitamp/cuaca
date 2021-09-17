@@ -34,6 +34,12 @@ type document struct {
 	tmax  float64
 }
 
+//mean numerical
+var mtdmin []float64
+var mtdmax []float64
+var mttmin []float64
+var mttmax []float64
+
 //dipisahkan untuk training dan test
 var train []document
 var test []document
@@ -52,6 +58,7 @@ func main() {
 	// train on train dataset
 	for _, doc := range train {
 		c.Train(doc.class, doc.time, doc.dmin, doc.dmax, doc.tmin, doc.tmax)
+
 	}
 
 	// fmt.Println("hasil training", c.totalDocuments)
@@ -103,9 +110,14 @@ func setupData(file string) {
 		//dibagi data train dan test
 		if rand.Float64() > testPercentage {
 			train = append(train, document{waktu, class, dmin, dmax, tmin, tmax})
+			mtdmin = append(mtdmin, dmin)
+			mtdmax = append(mtdmax, dmax)
+			mttmin = append(mttmin, tmin)
+			mttmax = append(mttmax, tmax)
 		} else {
 			test = append(test, document{waktu, class, dmin, dmax, tmin, tmax})
 		}
+
 	}
 }
 
