@@ -14,7 +14,6 @@ type Classifier struct {
 	cuaca               (map[string]map[string]int)
 	totalWords          int
 	categoriesDocuments map[string]int
-	totalDocuments      int
 	categoriesWords     map[string]int
 	threshold           float64
 }
@@ -25,7 +24,6 @@ func createClassifier(categories []string, threshold float64) (c Classifier) {
 		cuaca:               make(map[string]map[string]int),
 		totalWords:          0,
 		categoriesDocuments: make(map[string]int),
-		totalDocuments:      0,
 		categoriesWords:     make(map[string]int),
 		threshold:           threshold,
 	}
@@ -41,16 +39,9 @@ func createClassifier(categories []string, threshold float64) (c Classifier) {
 // Train the classifier
 func (c *Classifier) Train(category string, time string, dmin string, dmax string, tmin string, tmax string) {
 
-	// onehotvectors := gohot.CreateOneHotVectorFromText(time)
-
-	// for token, vector := range onehotvectors {
-	// 	fmt.Println(token, vector)
-
-	// c.cuaca[category][time] ++
 	c.categoriesWords[category]++
 	c.totalWords++
 	c.categoriesDocuments[category]++
-	c.totalDocuments++
 }
 
 // Classify a document
@@ -88,7 +79,7 @@ func (c *Classifier) Probabilities(waktu string, dmin string, dmax string, tmin 
 
 // p (category)
 func (c *Classifier) pCategory(category string) float64 {
-	return float64(c.categoriesDocuments[category]) / float64(c.totalDocuments)
+	return float64(c.categoriesDocuments[category]) / float64(len(train))
 }
 
 // p (condition | category)

@@ -41,6 +41,14 @@ func main() {
 
 	setupData(datafile)
 
+	//kalau mau jadi []string
+	// f, _ := os.Open(datafile)
+
+	// defer f.Close()
+
+	// r := csv.NewReader(f)
+	// records, _ := r.ReadAll()
+
 	fmt.Println("Data file used:", datafile)
 	fmt.Println("no of docs in TRAIN dataset:", len(train))
 	fmt.Println("no of docs in TEST dataset:", len(test))
@@ -52,6 +60,8 @@ func main() {
 	for _, doc := range train {
 		c.Train(doc.class, doc.time, doc.dmin, doc.dmax, doc.tmin, doc.tmax)
 	}
+
+	// fmt.Println("hasil training", c.totalDocuments)
 	// validate on test dataset
 	count, accurates, unknowns := 0, 0, 0
 	for _, doc := range test {
@@ -93,12 +103,10 @@ func setupData(file string) {
 	for _, line := range data {
 		s := strings.Split(line, ",")
 		waktu, class, dens_min, dens_max, temp_min, temp_max := s[0], s[1], s[2], s[3], s[4], s[5]
-		// time := make(map[string]int)
-		// time["Dini Hari"] = 0
-		// time["Pagi"] = 1
-		// time["Siang"] = 2
-		// time["Malam"] = 3
-		// fmt.Println("map:", time)
+		// for _, f := range dens_min {
+		// value, _ := strconv.ParseFloat(f, 64)
+		// fmt.Println(f)
+		// }
 		//dibagi data train dan test
 		if rand.Float64() > testPercentage {
 			train = append(train, document{waktu, class, dens_min, dens_max, temp_min, temp_max})

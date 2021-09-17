@@ -1,40 +1,29 @@
 package main
 
-import "fmt"
+import "math"
 
 // Calculate the mean of a list of numbers
-func mean(numbers []int) string {
-	return "yes" //sum(numbers) / float64(len(numbers))
+func mean(numbers []float64) float64 {
+	return sum(numbers) / float64(len(numbers))
 }
 
 // Calculate the standard deviation of a list of numbers
-func stdev(numbers []int) {
-	avg := mean(numbers)
-	fmt.Println(avg)
-	// variance := sum([(x-avg)**2 for x in numbers]) / float(len(numbers)-1)
-	return //sqrt(variance)
-}
-
-// # Calculate the mean, stdev and count for each column in a dataset
-func summarize_dataset(dataset []string) int {
-	// for _, column := range zip(*dataset) {
-	summaries := 4 // (mean(column), stdev(column), len(column))
-	// del(summaries[-1])
-	// }
-	return summaries
-}
-
-func zip(lists ...[]int) func() []int {
-	zip := make([]int, len(lists))
-	i := 0
-	return func() []int {
-		for j := range lists {
-			if i >= len(lists[j]) {
-				return nil
-			}
-			zip[j] = lists[j][i]
-		}
-		i++
-		return zip
+func stdev(numbers []float64) float64 {
+	var sd float64
+	for j := 0; j < len(numbers); j++ {
+		// The use of Pow math function func Pow(x, y float64) float64
+		sd += math.Pow(numbers[j]-mean(numbers), 2)
 	}
+	// The use of Sqrt math function func Sqrt(x float64) float64
+	sd = math.Sqrt(sd / float64(len(numbers)))
+	return sd //sqrt(variance)
+}
+
+func sum(arr []float64) float64 {
+	var res float64
+	res = 0
+	for i := 0; i < len(arr); i++ {
+		res += arr[i]
+	}
+	return res
 }
