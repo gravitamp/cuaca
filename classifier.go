@@ -12,8 +12,8 @@ type sorted struct {
 // Classifier is what we use to classify documents
 type Classifier struct {
 	waktu               (map[string]map[string]int)
-	Mean                map[string]map[float64]float64
-	Stdev               map[string]map[float64]float64
+	Mean                map[string]float64
+	Stdev               map[string]float64
 	totalWords          int
 	categoriesDocuments map[string]int
 	categoriesWords     map[string]int
@@ -25,6 +25,8 @@ func createClassifier(categories []string, threshold float64) (c Classifier) {
 	c = Classifier{
 		waktu:               make(map[string]map[string]int),
 		totalWords:          0,
+		Mean:                make(map[string]float64),
+		Stdev:               make(map[string]float64),
 		categoriesDocuments: make(map[string]int),
 		categoriesWords:     make(map[string]int),
 		threshold:           threshold,
@@ -34,13 +36,14 @@ func createClassifier(categories []string, threshold float64) (c Classifier) {
 		c.waktu[category] = make(map[string]int)
 		c.categoriesDocuments[category] = 0
 		c.categoriesWords[category] = 0
+		c.Mean[category] = 0
+		c.Stdev[category] = 0
 	}
 	return
 }
 
 // Train the classifier
 func (c *Classifier) Train(category string, time string, dmin float64, dmax float64, tmin float64, tmax float64) {
-
 	c.categoriesWords[category]++
 	c.totalWords++
 	c.categoriesDocuments[category]++
@@ -66,7 +69,6 @@ func (c *Classifier) Classify(waktu string, dmin float64, dmax float64, tmin flo
 	} else {
 		category = "unknown"
 	}
-
 	return
 }
 
@@ -90,16 +92,32 @@ func (c *Classifier) pDocumentCategory(category string, condition string) float6
 }
 
 // p (condition numerical | category)
-func (c *Classifier) pNumericalCategory(category string, condition float64) float64 {
-	me := c.Mean[category][condition]
-	sd := c.Stdev[category][condition]
-	d := NormalDist{me, sd}
+func (c *Classifier) pNumericalCategory1(category string, condition float64) float64 {
+	d := NormalDist{mean(mtdmin), stdev(mtdmin)}
+	return (d.PDF(condition))
+}
+
+// p (condition numerical | category)
+func (c *Classifier) pNumericalCategory2(category string, condition float64) float64 {
+	d := NormalDist{mean(mtdmax), stdev(mtdmax)}
+	return (d.PDF(condition))
+}
+
+// p (condition numerical | category)
+func (c *Classifier) pNumericalCategory3(category string, condition float64) float64 {
+	d := NormalDist{mean(mttmin), stdev(mttmin)}
+	return (d.PDF(condition))
+}
+
+// p (condition numerical | category)
+func (c *Classifier) pNumericalCategory4(category string, condition float64) float64 {
+	d := NormalDist{mean(mttmax), stdev(mttmax)}
 	return (d.PDF(condition))
 }
 
 // p (category | condition1|cond2|cond3|cond4)
 func (c *Classifier) pCategoryDocument(category string, waktu string, dmin float64, dmax float64, tmin float64, tmax float64) float64 {
-	return c.pDocumentCategory(category, waktu) * c.pNumericalCategory(category, dmin) *
-		c.pNumericalCategory(category, dmax) * c.pNumericalCategory(category, tmin) *
-		c.pNumericalCategory(category, tmax) * c.pCategory(category)
+	return c.pDocumentCategory(category, waktu) * c.pNumericalCategory1(category, dmin) *
+		c.pNumericalCategory2(category, dmax) * c.pNumericalCategory3(category, tmin) *
+		c.pNumericalCategory4(category, tmax) * c.pCategory(category)
 }

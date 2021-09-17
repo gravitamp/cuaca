@@ -16,7 +16,8 @@ import (
 var (
 	testPercentage = 0.1 //presentasi data test
 	datafile       = "data-cuaca.csv"
-	threshold      = 1.1
+	threshold      = 0.1
+
 	//exampleif `threshold` is `1.5` this means the category with the highest probability
 	// needs to be 1.5 times higher than the second highest probability.
 	// If the top category fails the threshold we will classify it as `unknown`.
@@ -110,6 +111,7 @@ func setupData(file string) {
 		//dibagi data train dan test
 		if rand.Float64() > testPercentage {
 			train = append(train, document{waktu, class, dmin, dmax, tmin, tmax})
+			//tapi ini belum tau classnya
 			mtdmin = append(mtdmin, dmin)
 			mtdmax = append(mtdmax, dmax)
 			mttmin = append(mttmin, tmin)
