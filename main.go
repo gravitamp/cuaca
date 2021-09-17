@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -27,10 +28,10 @@ var categories = []string{"Hujan", "Berawan", "Cerah"}
 type document struct {
 	time  string
 	class string
-	dmin  string
-	dmax  string
-	tmin  string
-	tmax  string
+	dmin  float64
+	dmax  float64
+	tmin  float64
+	tmax  float64
 }
 
 //dipisahkan untuk training dan test
@@ -40,14 +41,6 @@ var test []document
 func main() {
 
 	setupData(datafile)
-
-	//kalau mau jadi []string
-	// f, _ := os.Open(datafile)
-
-	// defer f.Close()
-
-	// r := csv.NewReader(f)
-	// records, _ := r.ReadAll()
 
 	fmt.Println("Data file used:", datafile)
 	fmt.Println("no of docs in TRAIN dataset:", len(train))
@@ -103,15 +96,15 @@ func setupData(file string) {
 	for _, line := range data {
 		s := strings.Split(line, ",")
 		waktu, class, dens_min, dens_max, temp_min, temp_max := s[0], s[1], s[2], s[3], s[4], s[5]
-		// for _, f := range dens_min {
-		// value, _ := strconv.ParseFloat(f, 64)
-		// fmt.Println(f)
-		// }
+		dmin, _ := strconv.ParseFloat(dens_min, 64)
+		dmax, _ := strconv.ParseFloat(dens_max, 64)
+		tmin, _ := strconv.ParseFloat(temp_min, 64)
+		tmax, _ := strconv.ParseFloat(temp_max, 64)
 		//dibagi data train dan test
 		if rand.Float64() > testPercentage {
-			train = append(train, document{waktu, class, dens_min, dens_max, temp_min, temp_max})
+			train = append(train, document{waktu, class, dmin, dmax, tmin, tmax})
 		} else {
-			test = append(test, document{waktu, class, dens_min, dens_max, temp_min, temp_max})
+			test = append(test, document{waktu, class, dmin, dmax, tmin, tmax})
 		}
 	}
 }

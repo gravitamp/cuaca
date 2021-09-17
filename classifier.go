@@ -37,7 +37,7 @@ func createClassifier(categories []string, threshold float64) (c Classifier) {
 }
 
 // Train the classifier
-func (c *Classifier) Train(category string, time string, dmin string, dmax string, tmin string, tmax string) {
+func (c *Classifier) Train(category string, time string, dmin float64, dmax float64, tmin float64, tmax float64) {
 
 	c.categoriesWords[category]++
 	c.totalWords++
@@ -45,7 +45,7 @@ func (c *Classifier) Train(category string, time string, dmin string, dmax strin
 }
 
 // Classify a document
-func (c *Classifier) Classify(waktu string, dmin string, dmax string, tmin string, tmax string) (category string) {
+func (c *Classifier) Classify(waktu string, dmin float64, dmax float64, tmin float64, tmax float64) (category string) {
 	// get all the probabilities of each category
 	prob := c.Probabilities(waktu, dmin, dmax, tmin, tmax)
 
@@ -69,10 +69,10 @@ func (c *Classifier) Classify(waktu string, dmin string, dmax string, tmin strin
 }
 
 // Probabilities of each category
-func (c *Classifier) Probabilities(waktu string, dmin string, dmax string, tmin string, tmax string) (p map[string]float64) {
+func (c *Classifier) Probabilities(waktu string, dmin float64, dmax float64, tmin float64, tmax float64) (p map[string]float64) {
 	p = make(map[string]float64)
 	for category := range c.cuaca {
-		p[category] = c.pCategoryDocument(category, waktu, dmin, dmax, tmin, tmax)
+		p[category] = c.pCategoryDocument(category, waktu)
 	}
 	return
 }
@@ -88,8 +88,6 @@ func (c *Classifier) pDocumentCategory(category string, condition string) float6
 }
 
 // p (category | condition1|cond2|cond3|cond4)
-func (c *Classifier) pCategoryDocument(category string, waktu string, dmin string, dmax string, tmin string, tmax string) float64 {
-	return c.pDocumentCategory(category, waktu) * c.pDocumentCategory(category, dmin) *
-		c.pDocumentCategory(category, dmax) * c.pDocumentCategory(category, tmin) *
-		c.pDocumentCategory(category, tmax) * c.pCategory(category)
+func (c *Classifier) pCategoryDocument(category string, waktu string) float64 {
+	return c.pDocumentCategory(category, waktu) * c.pCategory(category)
 }
